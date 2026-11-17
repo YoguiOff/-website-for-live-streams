@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#071c2b">
+<meta name="description" content="ヨギ Gaming — directos, vídeos y comunidad.">
+<title>ヨギ — Gaming</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700;800;900&family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<div class="ambient ambient-cyan"></div><div class="ambient ambient-pink"></div>
+<header class="site-header">
+  <a class="brand" href="#inicio">ヨギ<span>OFF</span></a>
+  <button class="menu-toggle" aria-label="Abrir menú" aria-expanded="false">☰</button>
+  <nav class="nav"><a href="#inicio">INICIO</a><a href="#directos">DIRECTOS</a><a href="#videos">VÍDEOS</a><a href="#comunidad">COMUNIDAD</a></nav>
+  <a class="header-cta" href="#directos">VER DIRECTOS <b>↗</b></a>
+</header>
+
+<main>
+<section class="hero" id="inicio">
+  <div class="hero-banner"><img src="assets/yogi-banner.png" alt="Banner ヨギ con estética gaming neón azul y rosa"></div>
+  <div class="hero-intro wrap">
+    <div class="hero-copy">
+      <p class="eyebrow"><span class="live-dot"></span> GAMING · STREAMING · COMMUNITY</p>
+      <h1>BIENVENIDO A<br><span>MI UNIVERSO</span></h1>
+      <p>Directos, gameplays y momentos épicos. Sígueme en tus plataformas favoritas y forma parte de la comunidad ヨギ.</p>
+      <div class="actions"><a class="button button-pink" href="#directos">ENTRAR AL DIRECTO ↗</a><a class="button button-glass" href="#videos">VER VÍDEOS</a></div>
+    </div>
+    <div class="mascot-card"><div class="mascot-glow"></div><img src="assets/yogi-avatar.png" alt="Mascota ilustrada de ヨギ"><div class="mascot-tag">YOGI PLAYER <span>オンライン</span></div></div>
+  </div>
+  <div class="hero-strip"><span>PLAY</span><i>✦</i><span>CONNECT</span><i>✦</i><span>REPEAT</span><i>✦</i><span>ヨギ GAMING</span></div>
+</section>
+
+<section class="section wrap" id="directos">
+  <div class="section-heading"><div><p class="eyebrow">NO TE PIERDAS LA ACCIÓN</p><h2>LIVE <span>ZONE</span></h2></div><p>Elige dónde quieres verme jugar.</p></div>
+  <div class="tabs"><button class="stream-tab active" data-platform="twitch" aria-selected="true">TWITCH</button><button class="stream-tab" data-platform="kick" aria-selected="false">KICK</button></div>
+  <div class="stream-layout">
+    <div class="player-frame"><div class="player-top"><span><i class="live-dot"></i> LIVE PLAYER</span><span id="player-platform">TWITCH</span></div><div class="player-placeholder" id="stream-player"><div class="play">▶</div><h3>EL PRÓXIMO DIRECTO TE ESPERA</h3><p>El reproductor de tu canal aparecerá aquí.</p></div></div>
+    <aside class="stream-aside"><p class="eyebrow">JOIN THE SESSION</p><h3>¡NOS VEMOS<br><span>EN EL CHAT!</span></h3><p>Entra al canal, activa las notificaciones y acompáñame en la próxima partida.</p><a class="text-link" id="channel-link" href="https://www.twitch.tv/yoguioff" target="_blank" rel="noopener">VISITAR CANAL ↗</a><div class="channel-status"><span>CANAL</span><b>YOGUIOFF</b><span>PLATAFORMA</span><b id="channel-platform">TWITCH</b></div></aside>
+  </div>
+</section>
+
+<section class="videos-section" id="videos"><div class="wrap section">
+  <div class="section-heading"><div><p class="eyebrow">ÚLTIMOS GAMEPLAYS Y MOMENTOS</p><h2>VIDEO <span>HUB</span></h2></div><a class="text-link" id="youtube-link" href="https://www.youtube.com/@YoguiOff" target="_blank" rel="noopener">IR A YOUTUBE ↗</a></div>
+  <div class="video-grid" id="video-grid">
+    <article class="video-card"><div class="thumb"><span>▶</span><small>YOUTUBE / 01</small></div><div class="video-info"><small>PRÓXIMAMENTE</small><h3>TUS VÍDEOS APARECERÁN AQUÍ</h3><p>Añade los ID de tus vídeos en config.js.</p></div></article>
+    <article class="video-card"><div class="thumb thumb-two"><span>▶</span><small>YOUTUBE / 02</small></div><div class="video-info"><small>GAMEPLAY</small><h3>PARTIDAS Y AVENTURAS</h3><p>Todo el contenido en un solo lugar.</p></div></article>
+    <article class="video-card"><div class="thumb thumb-three"><span>▶</span><small>YOUTUBE / 03</small></div><div class="video-info"><small>HIGHLIGHTS</small><h3>LOS MEJORES MOMENTOS</h3><p>Revive los momentos más épicos.</p></div></article>
+  </div>
+</div></section>
+
+<section class="community wrap" id="comunidad">
+  <div class="community-copy"><p class="eyebrow">LA PARTIDA ES MEJOR EN COMPAÑÍA</p><h2>¿JUGAMOS<br><span>UNA MÁS?</span></h2><p>Sígueme en redes y únete a la comunidad ヨギ.</p><div class="social-links"><a data-social="twitch" href="https://twitch.tv/yoguioff" target="_blank" rel="noopener">TWITCH ↗</a><a data-social="kick" href="https://kick.com/yoguioff" target="_blank" rel="noopener">KICK ↗</a><a data-social="youtube" href="https://youtube.com/@YoguiOff" target="_blank" rel="noopener">YOUTUBE ↗</a><a data-social="x" href="#">X ↗</a><a data-social="discord" href="#">DISCORD ↗</a></div></div>
+  <img class="community-avatar" src="assets/yogi-avatar.png" alt="Mascota de ヨギ">
+</section>
+</main>
+<footer class="site-footer"><a class="brand" href="#inicio">ヨギ<span>OFF</span></a><p>© <span id="year"></span> ヨギ GAMING</p><a href="#inicio">VOLVER ARRIBA ↑</a></footer>
+<script src="config.js"></script><script src="script.js"></script>
+</body></html>
