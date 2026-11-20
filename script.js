@@ -90,7 +90,31 @@
     if (value) link.href = value;
     else { link.href = "#"; link.addEventListener("click", e => e.preventDefault()); }
   });
-  // Catálogo público de ヨギ SHOP (sin credenciales privadas en el navegador).\n  const shopGrid = document.getElementById("shop-grid");\n  const shopProducts = Array.isArray(config.shopProducts) ? config.shopProducts : [];\n  const shopLabels = {ropa:"ROPA",tazas:"TAZAS",llaveros:"LLAVEROS",accesorios:"ACCESORIOS"};\n  function renderShop(filter="all") {\n    if (!shopGrid) return;\n    const products = shopProducts.filter(p => filter === "all" || p.category === filter);\n    if (!products.length) { shopGrid.innerHTML = '<div class="shop-empty"><span>✦</span><h3>' + (shopProducts.length ? "NO HAY PRODUCTOS EN ESTA CATEGORÍA" : "LA TIENDA SE ESTÁ PREPARANDO") + '</h3><p>' + (shopProducts.length ? "Prueba otra categoría." : "Pronto encontrarás aquí el merchandising oficial de ヨギ.") + "</p></div>"; return; }\n    shopGrid.replaceChildren();\n    products.forEach(product => {\n      const card=document.createElement("article");card.className="shop-card";\n      if(product.image){const img=document.createElement("img");img.className="shop-product-image";img.src=product.image;img.alt=product.name||"Producto ヨギ";img.loading="lazy";card.append(img);}else{const visual=document.createElement("div");visual.className="shop-product-placeholder";visual.textContent="ヨギ";card.append(visual);}\n      const info=document.createElement("div");info.className="shop-product-info";\n      const category=document.createElement("small");category.className="shop-product-category";category.textContent=shopLabels[product.category]||"MERCH";\n      const name=document.createElement("h3");name.textContent=product.name||"Producto ヨギ";\n      const desc=document.createElement("p");desc.textContent=product.description||"Merchandising oficial de ヨギ.";\n      const bottom=document.createElement("div");bottom.className="shop-product-bottom";\n      const price=document.createElement("span");price.className="shop-price";price.textContent=product.price ? String(product.price)+" "+(product.currency||"JPY") : "";bottom.append(price);\n      if(product.url){const buy=document.createElement("a");buy.className="shop-buy";buy.href=product.url;buy.target="_blank";buy.rel="noopener";buy.textContent="COMPRAR ↗";bottom.append(buy);}\n      info.append(category,name,desc,bottom);card.append(info);shopGrid.append(card);\n    });\n  }\n  renderShop();\n  document.querySelectorAll(".shop-filter").forEach(button=>button.addEventListener("click",()=>{document.querySelectorAll(".shop-filter").forEach(b=>b.classList.toggle("active",b===button));renderShop(button.dataset.shopFilter);}));\n  document.getElementById("year").textContent = new Date().getFullYear();
+  // Catálogo público de ヨギ SHOP (sin credenciales privadas en el navegador).
+  const shopGrid = document.getElementById("shop-grid");
+  const shopProducts = Array.isArray(config.shopProducts) ? config.shopProducts : [];
+  const shopLabels = {ropa:"ROPA",tazas:"TAZAS",llaveros:"LLAVEROS",accesorios:"ACCESORIOS"};
+  function renderShop(filter="all") {
+    if (!shopGrid) return;
+    const products = shopProducts.filter(p => filter === "all" || p.category === filter);
+    if (!products.length) { shopGrid.innerHTML = '<div class="shop-empty"><span>✦</span><h3>' + (shopProducts.length ? "NO HAY PRODUCTOS EN ESTA CATEGORÍA" : "LA TIENDA SE ESTÁ PREPARANDO") + '</h3><p>' + (shopProducts.length ? "Prueba otra categoría." : "Pronto encontrarás aquí el merchandising oficial de ヨギ.") + "</p></div>"; return; }
+    shopGrid.replaceChildren();
+    products.forEach(product => {
+      const card=document.createElement("article");card.className="shop-card";
+      if(product.image){const img=document.createElement("img");img.className="shop-product-image";img.src=product.image;img.alt=product.name||"Producto ヨギ";img.loading="lazy";card.append(img);}else{const visual=document.createElement("div");visual.className="shop-product-placeholder";visual.textContent="ヨギ";card.append(visual);}
+      const info=document.createElement("div");info.className="shop-product-info";
+      const category=document.createElement("small");category.className="shop-product-category";category.textContent=shopLabels[product.category]||"MERCH";
+      const name=document.createElement("h3");name.textContent=product.name||"Producto ヨギ";
+      const desc=document.createElement("p");desc.textContent=product.description||"Merchandising oficial de ヨギ.";
+      const bottom=document.createElement("div");bottom.className="shop-product-bottom";
+      const price=document.createElement("span");price.className="shop-price";price.textContent=product.price ? String(product.price)+" "+(product.currency||"JPY") : "";bottom.append(price);
+      if(product.url){const buy=document.createElement("a");buy.className="shop-buy";buy.href=product.url;buy.target="_blank";buy.rel="noopener";buy.textContent="COMPRAR ↗";bottom.append(buy);}
+      info.append(category,name,desc,bottom);card.append(info);shopGrid.append(card);
+    });
+  }
+  renderShop();
+  document.querySelectorAll(".shop-filter").forEach(button=>button.addEventListener("click",()=>{document.querySelectorAll(".shop-filter").forEach(b=>b.classList.toggle("active",b===button));renderShop(button.dataset.shopFilter);}));
+  document.getElementById("year").textContent = new Date().getFullYear();
   const menuButton = document.querySelector(".menu-toggle"), nav = document.querySelector(".nav");
   menuButton.addEventListener("click", () => {
     const open = nav.classList.toggle("open");
