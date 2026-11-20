@@ -1,7 +1,7 @@
 (() => {
   const translations = {
     es: {
-      nav: ["INICIO","DIRECTOS","VÍDEOS","COMUNIDAD"], cta:"Watch Live",
+      nav: ["INICIO","DIRECTOS","VÍDEOS","COMUNIDAD","SHOP"], cta:"Watch Live",
       heroEyebrow:"GAMING · STREAMING · COMUNIDAD", heroTitle:"BIENVENIDO A<br><span>MI UNIVERSO</span>",
       heroText:"Directos, gameplays y momentos épicos. Sígueme en tus plataformas favoritas y forma parte de la comunidad ヨギ.",
       heroLive:"ENTRAR AL DIRECTO ↗", heroVideos:"VER VÍDEOS", strip:["PLAY","CONNECT","REPEAT","ヨギ GAMING"],
@@ -16,7 +16,7 @@
       missing:"CONFIGURA TU CANAL DE", edit:"Edita config.js."
     },
     en: {
-      nav:["HOME","LIVE","VIDEOS","COMMUNITY"], cta:"Watch Live",
+      nav:["HOME","LIVE","VIDEOS","COMMUNITY","SHOP"], cta:"Watch Live",
       heroEyebrow:"GAMING · STREAMING · COMMUNITY", heroTitle:"WELCOME TO<br><span>MY UNIVERSE</span>",
       heroText:"Live streams, gameplays, and epic moments. Follow me on your favorite platforms and become part of the ヨギ community.",
       heroLive:"JOIN THE LIVE ↗", heroVideos:"WATCH VIDEOS", strip:["PLAY","CONNECT","REPEAT","ヨギ GAMING"],
@@ -31,7 +31,7 @@
       missing:"SET UP YOUR", edit:"Edit config.js."
     },
     ja: {
-      nav:["ホーム","ライブ配信","動画","コミュニティ"], cta:"ライブを見る",
+      nav:["ホーム","ライブ配信","動画","コミュニティ","ショップ"], cta:"ライブを見る",
       heroEyebrow:"ゲーム · 配信 · コミュニティ", heroTitle:"ヨギの<br><span>世界へようこそ</span>",
       heroText:"ライブ配信、ゲームプレイ、最高の瞬間。お気に入りのプラットフォームでフォローして、ヨギのコミュニティに参加しよう。",
       heroLive:"ライブを見る ↗", heroVideos:"動画を見る", strip:["PLAY","CONNECT","REPEAT","ヨギ GAMING"],
@@ -81,7 +81,7 @@
         const third=cards[2]?.querySelector(".video-info");if(third){third.querySelector("small").textContent=t.highlights;third.querySelector("h3").textContent=t.best;third.querySelector("p").textContent=t.relive;}
       } else cards.forEach((card,i)=>{const h=card.querySelector("h3");if(h)h.textContent=(lang==="ja"?"おすすめ動画 ":"FEATURED VIDEO ")+String(i+1).padStart(2,"0");});
     }
-    $(".community-copy .eyebrow").textContent=t.communityEyebrow;
+    const shopHeading=document.querySelector("#shop .section-heading .eyebrow"); if(shopHeading) shopHeading.textContent=lang==="ja"?"ヨギ公式グッズ":lang==="en"?"OFFICIAL MERCHANDISE":"MERCHANDISING OFICIAL";\n    const shopTitle=document.querySelector("#shop .section-heading h2"); if(shopTitle) shopTitle.innerHTML="ヨギ <span>SHOP</span>";\n    const shopDescription=document.querySelector("#shop .section-heading>p"); if(shopDescription) shopDescription.textContent=lang==="ja"?"コミュニティ限定アイテム。":lang==="en"?"Exclusive items for the community.":"Artículos exclusivos para la comunidad.";\n    const shopIntro=document.querySelector(".shop-intro h3"); if(shopIntro) shopIntro.textContent=lang==="ja"?"ヨギの世界をいつもそばに":"TAKE THE ヨギ UNIVERSE WITH YOU";\n    const shopIntroText=document.querySelector(".shop-intro p"); if(shopIntroText) shopIntroText.textContent=lang==="ja"?"コミュニティデザインのマグカップ、キーホルダー、ウェア、アクセサリー。":lang==="en"?"Mugs, keychains, apparel and accessories featuring community designs.":"Tazas, llaveros, ropa y accesorios con diseños de la comunidad."; \n    const filterLabels=lang==="ja"?["すべて","ウェア","マグカップ","キーホルダー","アクセサリー"]:lang==="en"?["ALL","APPAREL","MUGS","KEYCHAINS","ACCESSORIES"]:["TODOS","ROPA","TAZAS","LLAVEROS","ACCESORIOS"];\n    document.querySelectorAll(".shop-filter").forEach((b,i)=>{if(filterLabels[i])b.textContent=filterLabels[i];});\n    const shopNote=document.querySelector(".shop-note"); if(shopNote) shopNote.textContent=lang==="ja"?"製造・注文管理：Printful":lang==="en"?"Manufacturing and order fulfillment powered by Printful.":"Fabricación y gestión de pedidos mediante Printful.";\n    $(".community-copy .eyebrow").textContent=t.communityEyebrow;
     $(".community h2").innerHTML=t.communityTitle;
     $(".community-copy>p:not(.eyebrow)").textContent=t.communityText;
     $(".site-footer>a:last-child").textContent=t.back;
