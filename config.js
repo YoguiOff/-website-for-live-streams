@@ -3,7 +3,8 @@ window.YOGI_CONFIG = {
   twitch: "yoguioff",
   kick: "yoguioff",
   youtubeChannel: "https://www.youtube.com/@YoguiOff",
-  // Añade IDs de vídeos: ["ID_VIDEO_1", "ID_VIDEO_2"]
-  youtubeVideos: ["aFP9Wbyc6A0","0RTmUMxK7v4","s85p5j7bgNA"],
+  youtubeChannelId: "UCyNH6H2w3XIf728JV5AVUUg",
+  // Los vídeos se actualizan automáticamente desde las subidas del canal.
+  youtubeVideos: [],
   socials: { x: "https://x.com/YoguiOff", discord: "https://discord.gg/et6vFTYy7B" }
 };
