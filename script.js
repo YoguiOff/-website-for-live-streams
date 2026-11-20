@@ -90,30 +90,82 @@
     if (value) link.href = value;
     else { link.href = "#"; link.addEventListener("click", e => e.preventDefault()); }
   });
-  // Catálogo público de ヨギ SHOP (sin credenciales privadas en el navegador).
+  // Catálogo público de ヨギ SHOP. El token de Printful permanece en Cloudflare.
   const shopGrid = document.getElementById("shop-grid");
-  const shopProducts = Array.isArray(config.shopProducts) ? config.shopProducts : [];
+  let shopProducts = Array.isArray(config.shopProducts) ? config.shopProducts : [];
   const shopLabels = {ropa:"ROPA",tazas:"TAZAS",llaveros:"LLAVEROS",accesorios:"ACCESORIOS"};
-  function renderShop(filter="all") {
+  let activeShopFilter = "all";
+  function renderShop(filter = activeShopFilter) {
     if (!shopGrid) return;
+    activeShopFilter = filter;
     const products = shopProducts.filter(p => filter === "all" || p.category === filter);
-    if (!products.length) { shopGrid.innerHTML = '<div class="shop-empty"><span>✦</span><h3>' + (shopProducts.length ? "NO HAY PRODUCTOS EN ESTA CATEGORÍA" : "LA TIENDA SE ESTÁ PREPARANDO") + '</h3><p>' + (shopProducts.length ? "Prueba otra categoría." : "Pronto encontrarás aquí el merchandising oficial de ヨギ.") + "</p></div>"; return; }
+    if (!products.length) {
+      shopGrid.innerHTML = '<div class="shop-empty"><span>✦</span><h3>' +
+        (shopProducts.length ? "NO HAY PRODUCTOS EN ESTA CATEGORÍA" : "LA TIENDA SE ESTÁ PREPARANDO") +
+        '</h3><p>' + (shopProducts.length ? "Prueba otra categoría." : "Pronto encontrarás aquí el merchandising oficial de ヨギ.") + "</p></div>";
+      return;
+    }
     shopGrid.replaceChildren();
     products.forEach(product => {
-      const card=document.createElement("article");card.className="shop-card";
-      if(product.image){const img=document.createElement("img");img.className="shop-product-image";img.src=product.image;img.alt=product.name||"Producto ヨギ";img.loading="lazy";card.append(img);}else{const visual=document.createElement("div");visual.className="shop-product-placeholder";visual.textContent="ヨギ";card.append(visual);}
-      const info=document.createElement("div");info.className="shop-product-info";
-      const category=document.createElement("small");category.className="shop-product-category";category.textContent=shopLabels[product.category]||"MERCH";
-      const name=document.createElement("h3");name.textContent=product.name||"Producto ヨギ";
-      const desc=document.createElement("p");desc.textContent=product.description||"Merchandising oficial de ヨギ.";
-      const bottom=document.createElement("div");bottom.className="shop-product-bottom";
-      const price=document.createElement("span");price.className="shop-price";price.textContent=product.price ? String(product.price)+" "+(product.currency||"JPY") : "";bottom.append(price);
-      if(product.url){const buy=document.createElement("a");buy.className="shop-buy";buy.href=product.url;buy.target="_blank";buy.rel="noopener";buy.textContent="COMPRAR ↗";bottom.append(buy);}
-      info.append(category,name,desc,bottom);card.append(info);shopGrid.append(card);
+      const card = document.createElement("article");
+      card.className = "shop-card";
+      if (product.image) {
+        const img = document.createElement("img");
+        img.className = "shop-product-image";
+        img.src = product.image;
+        img.alt = product.name || "Producto ヨギ";
+        img.loading = "lazy";
+        card.append(img);
+      } else {
+        const visual = document.createElement("div");
+        visual.className = "shop-product-placeholder";
+        visual.textContent = "ヨギ";
+        card.append(visual);
+      }
+      const info = document.createElement("div");
+      info.className = "shop-product-info";
+      const category = document.createElement("small");
+      category.className = "shop-product-category";
+      category.textContent = shopLabels[product.category] || "MERCH";
+      const name = document.createElement("h3");
+      name.textContent = product.name || "Producto ヨギ";
+      const desc = document.createElement("p");
+      desc.textContent = product.description || "Merchandising oficial de ヨギ.";
+      const bottom = document.createElement("div");
+      bottom.className = "shop-product-bottom";
+      const price = document.createElement("span");
+      price.className = "shop-price";
+      price.textContent = product.price != null
+        ? new Intl.NumberFormat("ja-JP", { style: "currency", currency: product.currency || "JPY", maximumFractionDigits: 0 }).format(Number(product.price))
+        : "";
+      bottom.append(price);
+      const status = document.createElement("span");
+      status.className = "shop-buy";
+      status.textContent = "COMPRA PRÓXIMAMENTE";
+      bottom.append(status);
+      info.append(category, name, desc, bottom);
+      card.append(info);
+      shopGrid.append(card);
     });
   }
   renderShop();
-  document.querySelectorAll(".shop-filter").forEach(button=>button.addEventListener("click",()=>{document.querySelectorAll(".shop-filter").forEach(b=>b.classList.toggle("active",b===button));renderShop(button.dataset.shopFilter);}));
+  document.querySelectorAll(".shop-filter").forEach(button => button.addEventListener("click", () => {
+    document.querySelectorAll(".shop-filter").forEach(b => b.classList.toggle("active", b === button));
+    renderShop(button.dataset.shopFilter);
+  }));
+
+  // Recupera los productos publicados desde el Worker seguro de Cloudflare.
+  fetch("https://yogi-shop-api.vyogui.workers.dev/products")
+    .then(response => {
+      if (!response.ok) throw new Error("No se pudo consultar Printful");
+      return response.json();
+    })
+    .then(data => {
+      if (!data.success || !Array.isArray(data.products)) throw new Error("Respuesta de catálogo no válida");
+      shopProducts = data.products;
+      renderShop(activeShopFilter);
+    })
+    .catch(error => console.warn("Catálogo de ヨギ SHOP:", error));
   document.getElementById("year").textContent = new Date().getFullYear();
   const menuButton = document.querySelector(".menu-toggle"), nav = document.querySelector(".nav");
   menuButton.addEventListener("click", () => {
