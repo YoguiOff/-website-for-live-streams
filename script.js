@@ -93,7 +93,28 @@
   // Catálogo público de ヨギ SHOP. El token de Printful permanece en Cloudflare.
   const shopGrid = document.getElementById("shop-grid");
   let shopProducts = Array.isArray(config.shopProducts) ? config.shopProducts : [];
-  const shopLabels = {ropa:"ROPA",tazas:"TAZAS",llaveros:"LLAVEROS",accesorios:"ACCESORIOS"};
+  const shopLabels = {
+    es:{ropa:"ROPA",tazas:"TAZAS",llaveros:"LLAVEROS",accesorios:"ACCESORIOS"},
+    en:{ropa:"APPAREL",tazas:"MUGS",llaveros:"KEYCHAINS",accesorios:"ACCESSORIES"},
+    ja:{ropa:"ウェア",tazas:"マグカップ",llaveros:"キーホルダー",accesorios:"アクセサリー"}
+  };
+  const shopText = {
+    es:{merch:"Merchandising oficial de ヨギ.",buy:"COMPRA PRÓXIMAMENTE",empty:"LA TIENDA SE ESTÁ PREPARANDO",emptyText:"Pronto encontrarás aquí el merchandising oficial de ヨギ.",noCategory:"NO HAY PRODUCTOS EN ESTA CATEGORÍA",tryOther:"Prueba otra categoría.",product:"Producto ヨギ",mug:"Taza ヨギ"},
+    en:{merch:"Official ヨギ merchandise.",buy:"COMING SOON",empty:"THE SHOP IS COMING SOON",emptyText:"Official ヨギ merchandise will be available here soon.",noCategory:"NO PRODUCTS IN THIS CATEGORY",tryOther:"Try another category.",product:"ヨギ Product",mug:"ヨギ Mug"},
+    ja:{merch:"ヨギの公式グッズです。",buy:"近日発売",empty:"ショップ準備中",emptyText:"ヨギの公式グッズを近日公開します。",noCategory:"このカテゴリーに商品はありません",tryOther:"ほかのカテゴリーをお試しください。",product:"ヨギの商品",mug:"ヨギマグカップ"}
+  };
+  const currentShopText = () => shopText[window.YOGI_LANG] || shopText.es;
+  const currentShopLabels = () => shopLabels[window.YOGI_LANG] || shopLabels.es;
+  function translatedProductName(product) {
+    const name = product.name || "";
+    if (/ヨギカップ|yogi mug|taza yogi/i.test(name)) return currentShopText().mug;
+    return name || currentShopText().product;
+  }
+  function translatedProductDescription(product) {
+    const description = product.description || "";
+    if (!description || /merchandising oficial de ヨギ\.?|official ヨギ merchandise\.?/i.test(description)) return currentShopText().merch;
+    return description;
+  }
   let activeShopFilter = "all";
   function renderShop(filter = activeShopFilter) {
     if (!shopGrid) return;
@@ -101,8 +122,8 @@
     const products = shopProducts.filter(p => filter === "all" || p.category === filter);
     if (!products.length) {
       shopGrid.innerHTML = '<div class="shop-empty"><span>✦</span><h3>' +
-        (shopProducts.length ? "NO HAY PRODUCTOS EN ESTA CATEGORÍA" : "LA TIENDA SE ESTÁ PREPARANDO") +
-        '</h3><p>' + (shopProducts.length ? "Prueba otra categoría." : "Pronto encontrarás aquí el merchandising oficial de ヨギ.") + "</p></div>";
+        (shopProducts.length ? currentShopText().noCategory : currentShopText().empty) +
+        '</h3><p>' + (shopProducts.length ? currentShopText().tryOther : currentShopText().emptyText) + "</p></div>";
       return;
     }
     shopGrid.replaceChildren();
@@ -113,7 +134,7 @@
         const img = document.createElement("img");
         img.className = "shop-product-image";
         img.src = product.image;
-        img.alt = product.name || "Producto ヨギ";
+        img.alt = translatedProductName(product);
         img.loading = "lazy";
         card.append(img);
       } else {
@@ -126,11 +147,11 @@
       info.className = "shop-product-info";
       const category = document.createElement("small");
       category.className = "shop-product-category";
-      category.textContent = shopLabels[product.category] || "MERCH";
+      category.textContent = currentShopLabels()[product.category] || "MERCH";
       const name = document.createElement("h3");
-      name.textContent = product.name || "Producto ヨギ";
+      name.textContent = translatedProductName(product);
       const desc = document.createElement("p");
-      desc.textContent = product.description || "Merchandising oficial de ヨギ.";
+      desc.textContent = translatedProductDescription(product);
       const bottom = document.createElement("div");
       bottom.className = "shop-product-bottom";
       const price = document.createElement("span");
@@ -141,7 +162,7 @@
       bottom.append(price);
       const status = document.createElement("span");
       status.className = "shop-buy";
-      status.textContent = "COMPRA PRÓXIMAMENTE";
+      status.textContent = currentShopText().buy;
       bottom.append(status);
       info.append(category, name, desc, bottom);
       card.append(info);
@@ -153,6 +174,8 @@
     document.querySelectorAll(".shop-filter").forEach(b => b.classList.toggle("active", b === button));
     renderShop(button.dataset.shopFilter);
   }));
+
+  window.addEventListener("yogi-language-changed", () => renderShop(activeShopFilter));
 
   // Recupera los productos publicados desde el Worker seguro de Cloudflare.
   fetch("https://yogi-shop-api.vyogui.workers.dev/products")
