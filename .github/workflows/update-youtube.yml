@@ -44,10 +44,9 @@ jobs:
               if video_id:
                   videos.append({"id": video_id, "title": title, "published": published})
 
-          os.makedirs("data", exist_ok=True)
           with open("youtube-videos.json", "w", encoding="utf-8") as file:
               json.dump({"videos": videos}, file, ensure_ascii=False, indent=2)
-              file.write("\\n")
+              file.write("\n")
           print(f"Vídeos actualizados: {len(videos)}")
           PY
 
