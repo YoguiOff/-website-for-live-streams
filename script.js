@@ -37,6 +37,7 @@
   }
   tabs.forEach(tab => tab.addEventListener("click", () => showPlatform(tab.dataset.platform)));
   showPlatform("twitch");
+  window.addEventListener("yogi-language-changed", () => showPlatform(document.querySelector(".stream-tab.active")?.dataset.platform || "twitch"));
 
   const grid = document.getElementById("video-grid");
   const videos = Array.isArray(config.youtubeVideos) ? config.youtubeVideos.filter(Boolean) : [];
