@@ -73,12 +73,14 @@
     $("#videos .section-heading h2").innerHTML=t.videoTitle;
     $("#youtube-link").textContent=t.youtube;
     const cards=document.querySelectorAll("#video-grid .video-card");
-    if(!window.YOGI_CONFIG?.youtubeVideos?.length) {
-      const info=cards[0]?.querySelector(".video-info");
-      if(info){info.querySelector("small").textContent=t.soon;info.querySelector("h3").textContent=t.sampleTitle;info.querySelector("p").textContent=t.sampleText;}
-      const second=cards[1]?.querySelector(".video-info");if(second){second.querySelector("small").textContent=t.gameplay;second.querySelector("h3").textContent=t.matches;second.querySelector("p").textContent=t.allContent;}
-      const third=cards[2]?.querySelector(".video-info");if(third){third.querySelector("small").textContent=t.highlights;third.querySelector("h3").textContent=t.best;third.querySelector("p").textContent=t.relive;}
-    } else cards.forEach((card,i)=>{const h=card.querySelector("h3");if(h)h.textContent=(lang==="ja"?"おすすめ動画 ":"FEATURED VIDEO ")+String(i+1).padStart(2,"0");});
+    if(!document.querySelector("#video-grid")?.dataset.autoLoaded) {
+      if(!window.YOGI_CONFIG?.youtubeVideos?.length) {
+        const info=cards[0]?.querySelector(".video-info");
+        if(info){info.querySelector("small").textContent=t.soon;info.querySelector("h3").textContent=t.sampleTitle;info.querySelector("p").textContent=t.sampleText;}
+        const second=cards[1]?.querySelector(".video-info");if(second){second.querySelector("small").textContent=t.gameplay;second.querySelector("h3").textContent=t.matches;second.querySelector("p").textContent=t.allContent;}
+        const third=cards[2]?.querySelector(".video-info");if(third){third.querySelector("small").textContent=t.highlights;third.querySelector("h3").textContent=t.best;third.querySelector("p").textContent=t.relive;}
+      } else cards.forEach((card,i)=>{const h=card.querySelector("h3");if(h)h.textContent=(lang==="ja"?"おすすめ動画 ":"FEATURED VIDEO ")+String(i+1).padStart(2,"0");});
+    }
     $(".community-copy .eyebrow").textContent=t.communityEyebrow;
     $(".community h2").innerHTML=t.communityTitle;
     $(".community-copy>p:not(.eyebrow)").textContent=t.communityText;
