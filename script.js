@@ -40,26 +40,48 @@
   window.addEventListener("yogi-language-changed", () => showPlatform(document.querySelector(".stream-tab.active")?.dataset.platform || "twitch"));
 
   const grid = document.getElementById("video-grid");
-  const videos = Array.isArray(config.youtubeVideos) ? config.youtubeVideos.filter(Boolean) : [];
-  if (videos.length) {
+  const fallbackVideos = Array.isArray(config.youtubeVideos) ? config.youtubeVideos.filter(Boolean) : [];
+
+  function renderVideos(videos) {
+    if (!Array.isArray(videos) || !videos.length) return;
     grid.innerHTML = "";
-    videos.forEach((id, index) => {
+    videos.slice(0, 3).forEach((video, index) => {
+      const id = typeof video === "string" ? video : video.id;
+      if (!id) return;
+      const title = typeof video === "string" ? `Vídeo destacado ${String(index + 1).padStart(2, "0")}` : (video.title || "Vídeo de YouTube");
       const card = document.createElement("article");
       card.className = "video-card";
       const frame = document.createElement("iframe");
       frame.className = "video-embed";
       frame.src = `https://www.youtube-nocookie.com/embed/${encodeURIComponent(id)}`;
-      frame.title = `Vídeo de YouTube ${index + 1}`;
+      frame.title = title;
       frame.loading = "lazy";
       frame.allow = "accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share";
       frame.allowFullscreen = true;
       const info = document.createElement("div");
       info.className = "video-info";
-      info.innerHTML = `<small>YOUTUBE / VIDEO HUB</small><h3>VÍDEO DESTACADO ${String(index + 1).padStart(2, "0")}</h3>`;
-      card.append(frame, info); grid.append(card);
+      const label = document.createElement("small");
+      label.textContent = "YOUTUBE / VIDEO HUB";
+      const heading = document.createElement("h3");
+      heading.textContent = title;
+      const date = document.createElement("p");
+      date.textContent = typeof video === "string" || !video.published ? "" : new Date(video.published).toLocaleDateString(document.documentElement.lang || "es");
+      info.append(label, heading, date);
+      card.append(frame, info);
+      grid.append(card);
     });
+    grid.dataset.autoLoaded = "true";
   }
+
   if (config.youtubeChannel) document.getElementById("youtube-link").href = config.youtubeChannel;
+  renderVideos(fallbackVideos);
+  if (config.youtubeChannelId) {
+    fetch(`youtube-videos.json?v=${Date.now()}`, { cache: "no-store" })
+      .then(response => { if (!response.ok) throw new Error("No se pudo cargar la lista de YouTube"); return response.json(); })
+      .then(data => renderVideos(data.videos || []))
+      .catch(error => console.warn("Vídeos automáticos de YouTube:", error));
+  }
+
   document.querySelectorAll("[data-social]").forEach(link => {
     const key = link.dataset.social;
     const value = key === "twitch" && valid(config.twitch) ? `https://twitch.tv/${config.twitch}`
