@@ -1,4 +1,7 @@
 (() => {
+  const paymentStatus = new URLSearchParams(window.location.search).get("payment");
+  if (paymentStatus === "success") return;
+
   const config = window.YOGI_CONFIG || {};
   const player = document.getElementById("stream-player");
   const platformLabel = document.getElementById("player-platform");
