@@ -99,9 +99,9 @@
     ja:{ropa:"ウェア",tazas:"マグカップ",llaveros:"キーホルダー",accesorios:"アクセサリー"}
   };
   const shopText = {
-    es:{merch:"Merchandising oficial de ヨギ.",buy:"COMPRA PRÓXIMAMENTE",empty:"LA TIENDA SE ESTÁ PREPARANDO",emptyText:"Pronto encontrarás aquí el merchandising oficial de ヨギ.",noCategory:"NO HAY PRODUCTOS EN ESTA CATEGORÍA",tryOther:"Prueba otra categoría.",product:"Producto ヨギ",mug:"Taza ヨギ"},
-    en:{merch:"Official ヨギ merchandise.",buy:"COMING SOON",empty:"THE SHOP IS COMING SOON",emptyText:"Official ヨギ merchandise will be available here soon.",noCategory:"NO PRODUCTS IN THIS CATEGORY",tryOther:"Try another category.",product:"ヨギ Product",mug:"ヨギ Mug"},
-    ja:{merch:"ヨギの公式グッズです。",buy:"近日発売",empty:"ショップ準備中",emptyText:"ヨギの公式グッズを近日公開します。",noCategory:"このカテゴリーに商品はありません",tryOther:"ほかのカテゴリーをお試しください。",product:"ヨギの商品",mug:"ヨギマグカップ"}
+    es:{merch:"Merchandising oficial de ヨギ.",buy:"COMPRAR",empty:"LA TIENDA SE ESTÁ PREPARANDO",emptyText:"Pronto encontrarás aquí el merchandising oficial de ヨギ.",noCategory:"NO HAY PRODUCTOS EN ESTA CATEGORÍA",tryOther:"Prueba otra categoría.",product:"Producto ヨギ",mug:"Taza ヨギ"},
+    en:{merch:"Official ヨギ merchandise.",buy:"BUY NOW",empty:"THE SHOP IS COMING SOON",emptyText:"Official ヨギ merchandise will be available here soon.",noCategory:"NO PRODUCTS IN THIS CATEGORY",tryOther:"Try another category.",product:"ヨギ Product",mug:"ヨギ Mug"},
+    ja:{merch:"ヨギの公式グッズです。",buy:"購入する",empty:"ショップ準備中",emptyText:"ヨギの公式グッズを近日公開します。",noCategory:"このカテゴリーに商品はありません",tryOther:"ほかのカテゴリーをお試しください。",product:"ヨギの商品",mug:"ヨギマグカップ"}
   };
   const currentShopText = () => shopText[window.YOGI_LANG] || shopText.es;
   const currentShopLabels = () => shopLabels[window.YOGI_LANG] || shopLabels.es;
@@ -160,10 +160,38 @@
         ? new Intl.NumberFormat("ja-JP", { style: "currency", currency: product.currency || "JPY", maximumFractionDigits: 0 }).format(Number(product.price))
         : "";
       bottom.append(price);
-      const status = document.createElement("span");
-      status.className = "shop-buy";
-      status.textContent = currentShopText().buy;
-      bottom.append(status);
+      const buyButton = document.createElement("button");
+      buyButton.type = "button";
+      buyButton.className = "shop-buy";
+      buyButton.textContent = currentShopText().buy;
+      buyButton.addEventListener("click", async () => {
+        if (buyButton.disabled) return;
+        buyButton.disabled = true;
+        const originalText = buyButton.textContent;
+        buyButton.textContent = window.YOGI_LANG === "en" ? "LOADING..." : window.YOGI_LANG === "ja" ? "読み込み中..." : "CARGANDO...";
+        try {
+          const checkoutResponse = await fetch("https://yogi-shop-api.vyogui.workers.dev/create-checkout-session", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ productId: product.id })
+          });
+          const checkout = await checkoutResponse.json();
+          if (!checkoutResponse.ok || !checkout.success || !checkout.url) {
+            throw new Error(checkout.error || "No se pudo iniciar el pago");
+          }
+          window.location.assign(checkout.url);
+        } catch (error) {
+          console.error("Error al iniciar Stripe Checkout:", error);
+          alert(window.YOGI_LANG === "en"
+            ? "Could not start checkout. Please try again later."
+            : window.YOGI_LANG === "ja"
+              ? "決済を開始できませんでした。後でもう一度お試しください。"
+              : "No se pudo iniciar el pago. Inténtalo de nuevo más tarde.");
+          buyButton.disabled = false;
+          buyButton.textContent = originalText;
+        }
+      });
+      bottom.append(buyButton);
       info.append(category, name, desc, bottom);
       card.append(info);
       shopGrid.append(card);
