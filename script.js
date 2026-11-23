@@ -107,7 +107,7 @@
   const currentShopLabels = () => shopLabels[window.YOGI_LANG] || shopLabels.es;
   function translatedProductName(product) {
     const name = product.name || "";
-    if (/ヨギカップ|yogi mug|taza yogi/i.test(name)) return currentShopText().mug;
+    if (/ヨギ\s*カップ|yogi mug|taza yogi/i.test(name)) return currentShopText().mug;
     return name || currentShopText().product;
   }
   function translatedProductDescription(product) {
@@ -170,6 +170,21 @@
     });
   }
   renderShop();
+
+  // Cargar automáticamente el catálogo publicado en Printful a través del Worker.
+  const shopApiUrl = "https://yogi-shop-api.vyogui.workers.dev/products";
+  fetch(shopApiUrl, { cache: "no-store" })
+    .then(response => {
+      if (!response.ok) throw new Error("No se pudo cargar el catálogo de Printful");
+      return response.json();
+    })
+    .then(data => {
+      if (!data.success || !Array.isArray(data.products)) throw new Error("Respuesta de catálogo no válida");
+      shopProducts = data.products;
+      renderShop(activeShopFilter);
+    })
+    .catch(error => console.warn("Catálogo de ヨギ SHOP:", error));
+
   document.querySelectorAll(".shop-filter").forEach(button => button.addEventListener("click", () => {
     document.querySelectorAll(".shop-filter").forEach(b => b.classList.toggle("active", b === button));
     renderShop(button.dataset.shopFilter);
