@@ -9,5 +9,6 @@ window.YOGI_CONFIG = {
   // Enlace público de tu tienda BOOTH (añadir cuando tengamos la URL).
   boothShopUrl: "",
   // Productos opcionales para mostrar en la web.
-  shopProducts: [],\n  socials: { x: "https://x.com/YoguiOff", discord: "https://discord.gg/et6vFTYy7B" }
+  shopProducts: [],
+  socials: { x: "https://x.com/YoguiOff", discord: "https://discord.gg/et6vFTYy7B" }
 };
