@@ -88,7 +88,7 @@
     const shopIntroText=document.querySelector(".shop-intro p"); if(shopIntroText) shopIntroText.textContent=lang==="ja"?"コミュニティデザインのマグカップ、キーホルダー、ウェア、アクセサリー。":lang==="en"?"Mugs, keychains, apparel and accessories featuring community designs.":"Tazas, llaveros, ropa y accesorios con diseños de la comunidad."; 
     const filterLabels=lang==="ja"?["すべて","ウェア","マグカップ","キーホルダー","アクセサリー"]:lang==="en"?["ALL","APPAREL","MUGS","KEYCHAINS","ACCESSORIES"]:["TODOS","ROPA","TAZAS","LLAVEROS","ACCESORIOS"];
     document.querySelectorAll(".shop-filter").forEach((b,i)=>{if(filterLabels[i])b.textContent=filterLabels[i];});
-    const shopNote=document.querySelector(".shop-note"); if(shopNote) shopNote.textContent=lang==="ja"?"製造・注文管理：Printful":lang==="en"?"Manufacturing and order fulfillment powered by Printful.":"Fabricación y gestión de pedidos mediante Printful.";
+    const shopNote=document.querySelector(".shop-note"); if(shopNote) shopNote.textContent=lang==="ja"?"BOOTHでショップを見る ↗":lang==="en"?"VISIT THE BOOTH SHOP ↗":"VISITAR TIENDA EN BOOTH ↗";
     $(".community-copy .eyebrow").textContent=t.communityEyebrow;
     $(".community h2").innerHTML=t.communityTitle;
     $(".community-copy>p:not(.eyebrow)").textContent=t.communityText;
