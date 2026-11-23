@@ -90,7 +90,7 @@
     if (value) link.href = value;
     else { link.href = "#"; link.addEventListener("click", e => e.preventDefault()); }
   });
-  // Catálogo público de ヨギ SHOP. El token de Printful permanece en Cloudflare.
+  // Catálogo y enlaces de compra de ヨギ SHOP mediante BOOTH.
   const shopGrid = document.getElementById("shop-grid");
   let shopProducts = Array.isArray(config.shopProducts) ? config.shopProducts : [];
   const shopLabels = {
@@ -177,18 +177,12 @@
 
   window.addEventListener("yogi-language-changed", () => renderShop(activeShopFilter));
 
-  // Recupera los productos publicados desde el Worker seguro de Cloudflare.
-  fetch("https://yogi-shop-api.vyogui.workers.dev/products")
-    .then(response => {
-      if (!response.ok) throw new Error("No se pudo consultar Printful");
-      return response.json();
-    })
-    .then(data => {
-      if (!data.success || !Array.isArray(data.products)) throw new Error("Respuesta de catálogo no válida");
-      shopProducts = data.products;
-      renderShop(activeShopFilter);
-    })
-    .catch(error => console.warn("Catálogo de ヨギ SHOP:", error));
+  // BOOTH gestiona el catálogo, los pagos y los pedidos fuera de esta web.
+  const boothLink = document.getElementById("booth-shop-link");
+  if (boothLink && config.boothShopUrl) {
+    boothLink.href = config.boothShopUrl;
+    boothLink.hidden = false;
+  }
   document.getElementById("year").textContent = new Date().getFullYear();
   const menuButton = document.querySelector(".menu-toggle"), nav = document.querySelector(".nav");
   menuButton.addEventListener("click", () => {
