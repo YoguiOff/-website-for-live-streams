@@ -1,4 +1,80 @@
 (() => {
+  const paymentStatus = new URLSearchParams(window.location.search).get("payment");
+  if (paymentStatus === "success") {
+    const language = (() => {
+      try { return localStorage.getItem("yogi-language") || "es"; }
+      catch (_) { return "es"; }
+    })();
+    const copy = {
+      es: {
+        title: "¡Gracias por tu compra!",
+        lead: "Tu pago se ha procesado correctamente.",
+        body: "Gracias por apoyar ヨギ SHOP. Hemos recibido tu regreso desde la página segura de pago de Stripe.",
+        status: "PAGO COMPLETADO",
+        button: "VOLVER A LA TIENDA",
+        home: "VOLVER AL INICIO",
+        note: "Puedes cerrar esta página cuando quieras."
+      },
+      en: {
+        title: "Thank you for your purchase!",
+        lead: "Your payment has been processed successfully.",
+        body: "Thank you for supporting ヨギ SHOP. Stripe has returned you here from its secure checkout page.",
+        status: "PAYMENT COMPLETED",
+        button: "BACK TO THE SHOP",
+        home: "BACK TO HOME",
+        note: "You can close this page whenever you're ready."
+      },
+      ja: {
+        title: "ご購入ありがとうございます！",
+        lead: "お支払いが正常に処理されました。",
+        body: "ヨギ SHOPをご利用いただきありがとうございます。Stripeの安全な決済ページから戻りました。",
+        status: "お支払い完了",
+        button: "ショップに戻る",
+        home: "ホームに戻る",
+        note: "このページはいつでも閉じていただけます。"
+      }
+    };
+    const t = copy[language] || copy.es;
+    document.documentElement.lang = ["es","en","ja"].includes(language) ? language : "es";
+    document.title = "ヨギ SHOP | " + t.status;
+    document.body.innerHTML = `
+      <style>
+        body.payment-page{margin:0;min-height:100vh;background:radial-gradient(ellipse at 50% 0%,#123c55 0%,#071725 55%,#050d18 100%);color:#f4f8ff;font-family:Inter,Arial,sans-serif;display:grid;place-items:center;padding:24px;box-sizing:border-box}
+        .payment-wrap{width:min(100%,620px);text-align:center}
+        .payment-brand{font:800 19px Orbitron,Arial,sans-serif;letter-spacing:2px;color:#f4f8ff;margin-bottom:28px}
+        .payment-brand span{color:#00eaff}
+        .payment-card{padding:clamp(28px,6vw,54px) clamp(22px,5vw,48px);background:linear-gradient(145deg,#0b2638f2,#11182df2);border:1px solid #00eaff55;box-shadow:0 20px 70px #0008,0 0 35px #00eaff12}
+        .payment-check{width:76px;height:76px;margin:0 auto 24px;border:2px solid #00eaff;border-radius:50%;display:grid;place-items:center;color:#00eaff;font-size:42px;box-shadow:0 0 28px #00eaff35}
+        .payment-status{display:inline-block;padding:8px 13px;border:1px solid #00eaff66;color:#00eaff;font:700 10px Orbitron,Arial,sans-serif;letter-spacing:1.5px}
+        .payment-card h1{font:800 clamp(24px,5vw,36px)/1.25 Orbitron,Arial,sans-serif;margin:22px 0 12px}
+        .payment-lead{font-size:16px;font-weight:700;color:#fff;margin:0 0 12px}
+        .payment-body{font-size:14px;line-height:1.8;color:#a9c0d0;margin:0 auto;max-width:460px}
+        .payment-actions{display:flex;flex-wrap:wrap;justify-content:center;gap:12px;margin-top:30px}
+        .payment-button{display:inline-flex;justify-content:center;align-items:center;min-height:46px;padding:0 20px;text-decoration:none;font:800 10px Orbitron,Arial,sans-serif;letter-spacing:1px;box-sizing:border-box}
+        .payment-primary{background:linear-gradient(100deg,#ff28c9,#8b45ff);color:white}
+        .payment-secondary{border:1px solid #00eaff66;color:#00eaff}
+        .payment-note{font-size:11px;color:#7895a8;margin:22px 0 0}
+        @media(max-width:480px){.payment-actions{flex-direction:column}.payment-button{width:100%}}
+      </style>
+      <main class="payment-wrap">
+        <div class="payment-brand">ヨギ<span>OFF</span></div>
+        <section class="payment-card" aria-live="polite">
+          <div class="payment-check" aria-hidden="true">✓</div>
+          <div class="payment-status">${t.status}</div>
+          <h1>${t.title}</h1>
+          <p class="payment-lead">${t.lead}</p>
+          <p class="payment-body">${t.body}</p>
+          <div class="payment-actions">
+            <a class="payment-button payment-primary" href="./#shop">${t.button}</a>
+            <a class="payment-button payment-secondary" href="./">${t.home}</a>
+          </div>
+        </section>
+        <p class="payment-note">${t.note}</p>
+      </main>`;
+    document.body.className = "payment-page";
+    return;
+  }
+
   const translations = {
     es: {
       nav: ["INICIO","DIRECTOS","VÍDEOS","COMUNIDAD","SHOP"], cta:"Watch Live",
