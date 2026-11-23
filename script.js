@@ -177,16 +177,12 @@
           });
           const checkout = await checkoutResponse.json();
           if (!checkoutResponse.ok || !checkout.success || !checkout.url) {
-            throw new Error(checkout.error || "No se pudo iniciar el pago");
+            throw new Error(checkout.detail || checkout.error || "No se pudo iniciar el pago");
           }
           window.location.assign(checkout.url);
         } catch (error) {
           console.error("Error al iniciar Stripe Checkout:", error);
-          alert(window.YOGI_LANG === "en"
-            ? "Could not start checkout. Please try again later."
-            : window.YOGI_LANG === "ja"
-              ? "決済を開始できませんでした。後でもう一度お試しください。"
-              : "No se pudo iniciar el pago. Inténtalo de nuevo más tarde.");
+          alert(error.message || "No se pudo iniciar el pago. Inténtalo de nuevo más tarde.")
           buyButton.disabled = false;
           buyButton.textContent = originalText;
         }
