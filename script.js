@@ -1,6 +1,124 @@
 (() => {
-  const paymentStatus = new URLSearchParams(window.location.search).get("payment");
-  if (paymentStatus === "success") return;
+  const paymentParams = new URLSearchParams(window.location.search);
+  const paymentStatus = paymentParams.get("payment");
+  const checkoutSessionId = paymentParams.get("session_id");
+
+  async function handlePaymentReturn() {
+    if (paymentStatus !== "success" && paymentStatus !== "cancelled") return;
+
+    const notice = document.createElement("section");
+    notice.className = "payment-return-notice";
+    notice.setAttribute("role", "status");
+    notice.setAttribute("aria-live", "polite");
+    notice.style.cssText = "max-width:1100px;margin:24px auto;padding:20px 24px;border:1px solid rgba(0,234,255,.35);border-radius:14px;background:rgba(10,16,32,.96);color:#fff;box-shadow:0 8px 30px rgba(0,0,0,.22);";
+
+    const heading = document.createElement("h2");
+    heading.style.cssText = "margin:0 0 8px;font-size:1.25rem;";
+    const message = document.createElement("p");
+    message.style.cssText = "margin:0;line-height:1.6;";
+    notice.append(heading, message);
+
+    const main = document.querySelector("main");
+    if (main) main.prepend(notice);
+    else document.body.prepend(notice);
+
+    const lang = () => window.YOGI_LANG || document.documentElement.lang || "es";
+    const copy = {
+      es: {
+        cancelledTitle: "Compra cancelada",
+        cancelledText: "No se ha realizado ningún cobro. Puedes volver a la tienda cuando quieras.",
+        checkingTitle: "Verificando tu pago…",
+        checkingText: "Estamos comprobando la confirmación directamente con Stripe.",
+        successTitle: "¡Gracias por tu compra!",
+        pendingTitle: "Pago pendiente de confirmación",
+        pendingText: "Stripe todavía no confirma el pago. Si acabas de pagar, espera un momento y revisa el correo de confirmación.",
+        errorTitle: "No pudimos verificar el pago",
+        errorText: "No vuelvas a realizar el pago todavía. Comprueba el correo de Stripe o contacta con nosotros para revisar el pedido."
+      },
+      en: {
+        cancelledTitle: "Checkout cancelled",
+        cancelledText: "You have not been charged. You can return to the shop whenever you like.",
+        checkingTitle: "Verifying your payment…",
+        checkingText: "We are checking the payment directly with Stripe.",
+        successTitle: "Thank you for your purchase!",
+        pendingTitle: "Payment confirmation pending",
+        pendingText: "Stripe has not confirmed the payment yet. If you just paid, please wait a moment and check your confirmation email.",
+        errorTitle: "We couldn't verify the payment",
+        errorText: "Please don't try to pay again yet. Check your Stripe email receipt or contact us so we can review the order."
+      },
+      ja: {
+        cancelledTitle: "購入はキャンセルされました",
+        cancelledText: "料金は請求されていません。いつでもショップに戻れます。",
+        checkingTitle: "お支払いを確認しています…",
+        checkingText: "Stripeに直接問い合わせてお支払い状況を確認しています。",
+        successTitle: "ご購入ありがとうございます！",
+        pendingTitle: "お支払いの確認待ちです",
+        pendingText: "Stripeでまだお支払いが確認できていません。お支払い直後の場合は、少し待って確認メールをご確認ください。",
+        errorTitle: "お支払いを確認できませんでした",
+        errorText: "まだ再度お支払いをしないでください。Stripeのメール、またはお問い合わせから注文状況をご確認ください。"
+      }
+    };
+    const getCopy = () => copy[lang()] || copy.es;
+
+    if (paymentStatus === "cancelled") {
+      heading.textContent = getCopy().cancelledTitle;
+      message.textContent = getCopy().cancelledText;
+      notice.style.borderColor = "rgba(255,255,255,.2)";
+      window.history.replaceState({}, document.title, window.location.pathname + window.location.hash);
+      return;
+    }
+
+    heading.textContent = getCopy().checkingTitle;
+    message.textContent = getCopy().checkingText;
+
+    if (!checkoutSessionId) {
+      heading.textContent = getCopy().errorTitle;
+      message.textContent = getCopy().errorText;
+      window.history.replaceState({}, document.title, window.location.pathname + window.location.hash);
+      return;
+    }
+
+    try {
+      const verifyResponse = await fetch(
+        "https://yogi-shop-api.vyogui.workers.dev/verify-checkout-session?session_id=" + encodeURIComponent(checkoutSessionId),
+        { method: "GET", cache: "no-store" }
+      );
+      const result = await verifyResponse.json();
+
+      if (!verifyResponse.ok || !result.success) {
+        throw new Error(result.detail || result.error || "Payment verification failed");
+      }
+
+      if (result.verified) {
+        heading.textContent = getCopy().successTitle;
+        const amount = Number(result.amount);
+        const currency = String(result.currency || "JPY").toUpperCase();
+        const formattedAmount = Number.isFinite(amount)
+          ? new Intl.NumberFormat(lang() === "ja" ? "ja-JP" : lang() === "en" ? "en-US" : "es-ES", {
+              style: "currency",
+              currency,
+              maximumFractionDigits: 0
+            }).format(amount)
+          : "";
+        const productText = result.product ? String(result.product) : "";
+        message.textContent = [productText, formattedAmount].filter(Boolean).join(" — ");
+        notice.style.borderColor = "rgba(46,204,113,.55)";
+      } else {
+        heading.textContent = getCopy().pendingTitle;
+        message.textContent = getCopy().pendingText;
+        notice.style.borderColor = "rgba(255,190,70,.55)";
+      }
+    } catch (error) {
+      console.error("Error verificando el pago:", error);
+      heading.textContent = getCopy().errorTitle;
+      message.textContent = getCopy().errorText;
+      notice.style.borderColor = "rgba(255,120,120,.55)";
+    }
+
+    window.history.replaceState({}, document.title, window.location.pathname + window.location.hash);
+  }
+
+  void handlePaymentReturn();
 
   const config = window.YOGI_CONFIG || {};
   const player = document.getElementById("stream-player");
