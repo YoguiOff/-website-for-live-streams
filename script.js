@@ -209,6 +209,14 @@
       buyButton.type = "button";
       buyButton.className = "shop-buy";
       buyButton.textContent = currentShopText().buy;
+      if (!variants.length) {
+        buyButton.disabled = true;
+        buyButton.textContent = window.YOGI_LANG === "en" ? "UPDATING..." : window.YOGI_LANG === "ja" ? "更新中..." : "ACTUALIZANDO...";
+        buyButton.title = window.YOGI_LANG === "en"
+          ? "Purchases will be enabled after the shop update."
+          : window.YOGI_LANG === "ja" ? "ショップの更新後に購入できます。"
+          : "Las compras estarán disponibles cuando termine la actualización de la tienda.";
+      }
       buyButton.addEventListener("click", async () => {
         if (buyButton.disabled) return;
         buyButton.disabled = true;
