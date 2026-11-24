@@ -220,9 +220,9 @@
     ja:{ropa:"ウェア",tazas:"マグカップ",llaveros:"キーホルダー",accesorios:"アクセサリー"}
   };
   const shopText = {
-    es:{merch:"Merchandising oficial de ヨギ.",buy:"COMPRAR",empty:"LA TIENDA SE ESTÁ PREPARANDO",emptyText:"Pronto encontrarás aquí el merchandising oficial de ヨギ.",noCategory:"NO HAY PRODUCTOS EN ESTA CATEGORÍA",tryOther:"Prueba otra categoría.",product:"Producto ヨギ",mug:"Taza ヨギ"},
-    en:{merch:"Official ヨギ merchandise.",buy:"BUY NOW",empty:"THE SHOP IS COMING SOON",emptyText:"Official ヨギ merchandise will be available here soon.",noCategory:"NO PRODUCTS IN THIS CATEGORY",tryOther:"Try another category.",product:"ヨギ Product",mug:"ヨギ Mug"},
-    ja:{merch:"ヨギの公式グッズです。",buy:"購入する",empty:"ショップ準備中",emptyText:"ヨギの公式グッズを近日公開します。",noCategory:"このカテゴリーに商品はありません",tryOther:"ほかのカテゴリーをお試しください。",product:"ヨギの商品",mug:"ヨギマグカップ"}
+    es:{merch:"Merchandising oficial de ヨギ.",buy:"COMPRAR",shippingIncluded:"Envío incluido en el precio",empty:"LA TIENDA SE ESTÁ PREPARANDO",emptyText:"Pronto encontrarás aquí el merchandising oficial de ヨギ.",noCategory:"NO HAY PRODUCTOS EN ESTA CATEGORÍA",tryOther:"Prueba otra categoría.",product:"Producto ヨギ",mug:"Taza ヨギ"},
+    en:{merch:"Official ヨギ merchandise.",buy:"BUY NOW",shippingIncluded:"Shipping included in the price",empty:"THE SHOP IS COMING SOON",emptyText:"Official ヨギ merchandise will be available here soon.",noCategory:"NO PRODUCTS IN THIS CATEGORY",tryOther:"Try another category.",product:"ヨギ Product",mug:"ヨギ Mug"},
+    ja:{merch:"ヨギの公式グッズです。",buy:"購入する",shippingIncluded:"送料込み",empty:"ショップ準備中",emptyText:"ヨギの公式グッズを近日公開します。",noCategory:"このカテゴリーに商品はありません",tryOther:"ほかのカテゴリーをお試しください。",product:"ヨギの商品",mug:"ヨギマグカップ"}
   };
   const currentShopText = () => shopText[window.YOGI_LANG] || shopText.es;
   const currentShopLabels = () => shopLabels[window.YOGI_LANG] || shopLabels.es;
@@ -297,8 +297,15 @@
 
       const bottom = document.createElement("div");
       bottom.className = "shop-product-bottom";
+      const priceBlock = document.createElement("div");
+      priceBlock.className = "shop-price-block";
       const price = document.createElement("span");
       price.className = "shop-price";
+      const shippingNote = document.createElement("small");
+      shippingNote.className = "shop-shipping-note";
+      shippingNote.textContent = currentShopText().shippingIncluded;
+      shippingNote.setAttribute("aria-label", currentShopText().shippingIncluded);
+      priceBlock.append(price, shippingNote);
 
       const formatPrice = (amount, currency) => amount != null
         ? new Intl.NumberFormat(window.YOGI_LANG === "ja" ? "ja-JP" : window.YOGI_LANG === "en" ? "en-US" : "es-ES", {
@@ -322,7 +329,7 @@
         });
       }
 
-      bottom.append(price);
+      bottom.append(priceBlock);
       const buyButton = document.createElement("button");
       buyButton.type = "button";
       buyButton.className = "shop-buy";
