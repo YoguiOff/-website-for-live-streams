@@ -155,13 +155,55 @@
       name.textContent = translatedProductName(product);
       const desc = document.createElement("p");
       desc.textContent = translatedProductDescription(product);
+      const variants = Array.isArray(product.variants)
+        ? product.variants.filter(variant => variant && variant.id != null)
+        : [];
+      let selectedVariant = variants[0] || null;
+
+      const variantSelect = document.createElement("select");
+      variantSelect.className = "shop-variant-select";
+      variantSelect.setAttribute("aria-label",
+        window.YOGI_LANG === "en" ? "Choose an option" :
+        window.YOGI_LANG === "ja" ? "オプションを選択" : "Elige una opción"
+      );
+
+      if (variants.length > 1) {
+        variants.forEach((variant, index) => {
+          const option = document.createElement("option");
+          option.value = String(variant.id);
+          option.textContent = variant.name || (window.YOGI_LANG === "en" ? `Option ${index + 1}` : window.YOGI_LANG === "ja" ? `オプション ${index + 1}` : `Opción ${index + 1}`);
+          variantSelect.append(option);
+        });
+        info.append(variantSelect);
+      }
+
       const bottom = document.createElement("div");
       bottom.className = "shop-product-bottom";
       const price = document.createElement("span");
       price.className = "shop-price";
-      price.textContent = product.price != null
-        ? new Intl.NumberFormat("ja-JP", { style: "currency", currency: product.currency || "JPY", maximumFractionDigits: 0 }).format(Number(product.price))
+
+      const formatPrice = (amount, currency) => amount != null
+        ? new Intl.NumberFormat(window.YOGI_LANG === "ja" ? "ja-JP" : window.YOGI_LANG === "en" ? "en-US" : "es-ES", {
+            style: "currency",
+            currency: currency || product.currency || "JPY",
+            maximumFractionDigits: 0
+          }).format(Number(amount))
         : "";
+
+      const updateDisplayedPrice = () => {
+        const amount = selectedVariant ? selectedVariant.price : product.price;
+        const currency = selectedVariant ? selectedVariant.currency : product.currency;
+        price.textContent = formatPrice(amount, currency);
+      };
+      updateDisplayedPrice();
+
+      if (variants.length > 1) {
+        variantSelect.addEventListener("change", () => {
+          selectedVariant = variants.find(variant => String(variant.id) === variantSelect.value) || variants[0];
+          updateDisplayedPrice();
+        });
+      }
+
       bottom.append(price);
       const buyButton = document.createElement("button");
       buyButton.type = "button";
@@ -173,10 +215,13 @@
         const originalText = buyButton.textContent;
         buyButton.textContent = window.YOGI_LANG === "en" ? "LOADING..." : window.YOGI_LANG === "ja" ? "読み込み中..." : "CARGANDO...";
         try {
+          const requestBody = { productId: product.id };
+          if (selectedVariant) requestBody.variantId = selectedVariant.id;
+
           const checkoutResponse = await fetch("https://yogi-shop-api.vyogui.workers.dev/create-checkout-session", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ productId: product.id })
+            body: JSON.stringify(requestBody)
           });
           const checkout = await checkoutResponse.json();
           if (!checkoutResponse.ok || !checkout.success || !checkout.url) {
@@ -185,7 +230,7 @@
           window.location.assign(checkout.url);
         } catch (error) {
           console.error("Error al iniciar Stripe Checkout:", error);
-          alert(error.message || "No se pudo iniciar el pago. Inténtalo de nuevo más tarde.")
+          alert(error.message || "No se pudo iniciar el pago. Inténtalo de nuevo más tarde.");
           buyButton.disabled = false;
           buyButton.textContent = originalText;
         }
