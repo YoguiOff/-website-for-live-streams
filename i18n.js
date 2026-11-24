@@ -102,7 +102,7 @@
             <p class="payment-lead">${lead}</p>
             <p class="payment-body">${body}</p>
             <div class="payment-actions">
-              <a class="payment-button payment-primary" href="./#shop">${t.button}</a>
+              <a class="payment-button payment-primary" href="https://yoguioff.com/#shop">${t.button}</a>
               <a class="payment-button payment-secondary" href="./">${t.home}</a>
             </div>
           </section>
