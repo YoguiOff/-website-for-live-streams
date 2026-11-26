@@ -220,9 +220,9 @@
     ja:{ropa:"ウェア",tazas:"マグカップ",llaveros:"キーホルダー",accesorios:"アクセサリー"}
   };
   const shopText = {
-    es:{merch:"Merchandising oficial de ヨギ.",buy:"COMPRAR",shippingIncluded:"Envío incluido en el precio",japanOnly:"🇯🇵 Solo Japón",empty:"LA TIENDA SE ESTÁ PREPARANDO",emptyText:"Pronto encontrarás aquí el merchandising oficial de ヨギ.",noCategory:"NO HAY PRODUCTOS EN ESTA CATEGORÍA",tryOther:"Prueba otra categoría.",product:"Producto ヨギ",mug:"Taza ヨギ"},
-    en:{merch:"Official ヨギ merchandise.",buy:"BUY NOW",shippingIncluded:"Shipping included in the price",japanOnly:"🇯🇵 Japan only",empty:"THE SHOP IS COMING SOON",emptyText:"Official ヨギ merchandise will be available here soon.",noCategory:"NO PRODUCTS IN THIS CATEGORY",tryOther:"Try another category.",product:"ヨギ Product",mug:"ヨギ Mug"},
-    ja:{merch:"ヨギの公式グッズです。",buy:"購入する",shippingIncluded:"送料込み",japanOnly:"🇯🇵 日本のみ",empty:"ショップ準備中",emptyText:"ヨギの公式グッズを近日公開します。",noCategory:"このカテゴリーに商品はありません",tryOther:"ほかのカテゴリーをお試しください。",product:"ヨギの商品",mug:"ヨギマグカップ"}
+    es:{merch:"Merchandising oficial de ヨギ.",buy:"COMPRAR",shippingIncluded:"Envío incluido en el precio",japanOnly:"Solo Japón",empty:"LA TIENDA SE ESTÁ PREPARANDO",emptyText:"Pronto encontrarás aquí el merchandising oficial de ヨギ.",noCategory:"NO HAY PRODUCTOS EN ESTA CATEGORÍA",tryOther:"Prueba otra categoría.",product:"Producto ヨギ",mug:"Taza ヨギ"},
+    en:{merch:"Official ヨギ merchandise.",buy:"BUY NOW",shippingIncluded:"Shipping included in the price",japanOnly:"Japan only",empty:"THE SHOP IS COMING SOON",emptyText:"Official ヨギ merchandise will be available here soon.",noCategory:"NO PRODUCTS IN THIS CATEGORY",tryOther:"Try another category.",product:"ヨギ Product",mug:"ヨギ Mug"},
+    ja:{merch:"ヨギの公式グッズです。",buy:"購入する",shippingIncluded:"送料込み",japanOnly:"日本のみ",empty:"ショップ準備中",emptyText:"ヨギの公式グッズを近日公開します。",noCategory:"このカテゴリーに商品はありません",tryOther:"ほかのカテゴリーをお試しください。",product:"ヨギの商品",mug:"ヨギマグカップ"}
   };
   const currentShopText = () => shopText[window.YOGI_LANG] || shopText.es;
   const currentShopLabels = () => shopLabels[window.YOGI_LANG] || shopLabels.es;
@@ -310,7 +310,14 @@
       if (/メリクリエディション/i.test(String(product.name || ""))) {
         const japanOnlyNote = document.createElement("small");
         japanOnlyNote.className = "shop-shipping-note";
-        japanOnlyNote.textContent = currentShopText().japanOnly;
+        const japanFlag = document.createElement("img");
+        japanFlag.className = "shop-country-flag";
+        japanFlag.src = "https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/72x72/1f1ef-1f1f5.png";
+        japanFlag.alt = "";
+        japanFlag.width = 14;
+        japanFlag.height = 14;
+        japanFlag.setAttribute("aria-hidden", "true");
+        japanOnlyNote.append(japanFlag, document.createTextNode(currentShopText().japanOnly));
         japanOnlyNote.setAttribute("aria-label", currentShopText().japanOnly);
         priceBlock.append(japanOnlyNote);
       }
