@@ -152,6 +152,7 @@
       videoTitle:"VIDEO <span>HUB</span>", youtube:"IR A YOUTUBE ↗", soon:"PRÓXIMAMENTE", sampleTitle:"TUS VÍDEOS APARECERÁN AQUÍ", sampleText:"Añade los ID de tus vídeos en config.js.",
       gameplay:"GAMEPLAY", matches:"PARTIDAS Y AVENTURAS", allContent:"Todo el contenido en un solo lugar.", highlights:"HIGHLIGHTS", best:"LOS MEJORES MOMENTOS", relive:"Revive los momentos más épicos.",
       communityEyebrow:"THE GAME IS BETTER WHEN PLAYED WITH OTHERS", communityTitle:"¿JUGAMOS<br><span>もう１戦？</span>", communityText:"Sígueme en redes sociales y únete a la comunidad ヨギ.",
+      shippingTitle:"Envíos y entregas", shippingText:"Los pedidos tienen un plazo estimado de entrega de <strong>5 a 7 días laborables</strong> dentro de Japón.",
       back:"VOLVER ARRIBA ↑", menu:"Abrir menú", altBanner:"Banner ヨギ con estética gaming neón azul y rosa", altMascot:"Mascota ilustrada de ヨギ", altNani:"NANI, mascota de ヨギ",
       missing:"CONFIGURA TU CANAL DE", edit:"Edita config.js."
     },
@@ -167,6 +168,7 @@
       videoTitle:"VIDEO <span>HUB</span>", youtube:"GO TO YOUTUBE ↗", soon:"COMING SOON", sampleTitle:"YOUR VIDEOS WILL APPEAR HERE", sampleText:"Add your video IDs in config.js.",
       gameplay:"GAMEPLAY", matches:"GAMES AND ADVENTURES", allContent:"All your content in one place.", highlights:"HIGHLIGHTS", best:"THE BEST MOMENTS", relive:"Relive the most epic moments.",
       communityEyebrow:"THE GAME IS BETTER WHEN PLAYED WITH OTHERS", communityTitle:"SHALL WE PLAY<br><span>ONE MORE?</span>", communityText:"Follow me on social media and join the ヨギ community.",
+      shippingTitle:"Shipping and delivery", shippingText:"Orders have an estimated delivery time of <strong>5 to 7 business days</strong> within Japan.",
       back:"BACK TO TOP ↑", menu:"Open menu", altBanner:"ヨギ banner with blue and pink neon gaming aesthetic", altMascot:"ヨギ illustrated mascot", altNani:"NANI, ヨギ mascot",
       missing:"SET UP YOUR", edit:"Edit config.js."
     },
@@ -182,6 +184,7 @@
       videoTitle:"動画 <span>ハブ</span>", youtube:"YouTubeを見る ↗", soon:"近日公開", sampleTitle:"ここに動画が表示されます", sampleText:"config.js に動画 ID を追加してください。",
       gameplay:"ゲームプレイ", matches:"ゲームと冒険", allContent:"すべてのコンテンツをここに。", highlights:"ハイライト", best:"最高の瞬間", relive:"最高に熱い瞬間をもう一度。",
       communityEyebrow:"みんなで遊べば、もっと楽しい", communityTitle:"もう<br><span>１戦いこう？</span>", communityText:"SNSをフォローして、ヨギのコミュニティに参加しよう。",
+      shippingTitle:"配送とお届け", shippingText:"日本国内のお届け目安は、注文処理後<strong>5〜7営業日</strong>です。",
       back:"トップへ戻る ↑", menu:"メニューを開く", altBanner:"青とピンクのネオンを使ったヨギのゲームバナー", altMascot:"ヨギのイラストマスコット", altNani:"ヨギのマスコット、ナニ",
       missing:"チャンネルを設定：", edit:"config.js を編集してください。"
     }
@@ -228,6 +231,8 @@
     const shopIntroText=document.querySelector(".shop-intro p"); if(shopIntroText) shopIntroText.textContent=lang==="ja"?"コミュニティデザインのマグカップ、キーホルダー、ウェア、アクセサリー。":lang==="en"?"Mugs, keychains, apparel and accessories featuring community designs.":"Tazas, llaveros, ropa y accesorios con diseños de la comunidad."; 
     const filterLabels=lang==="ja"?["すべて","ウェア","マグカップ","キーホルダー","アクセサリー"]:lang==="en"?["ALL","APPAREL","MUGS","KEYCHAINS","ACCESSORIES"]:["TODOS","ROPA","TAZAS","LLAVEROS","ACCESORIOS"];
     document.querySelectorAll(".shop-filter").forEach((b,i)=>{if(filterLabels[i])b.textContent=filterLabels[i];});
+    const shippingTitle=document.querySelector("#shipping-info-title"); if(shippingTitle) shippingTitle.textContent=t.shippingTitle;
+    const shippingText=document.querySelector("#shipping-info-text"); if(shippingText) shippingText.innerHTML=t.shippingText;
     const shopNote=document.querySelector(".shop-note"); if(shopNote) shopNote.textContent=lang==="ja"?"BOOTHでショップを見る ↗":lang==="en"?"VISIT THE BOOTH SHOP ↗":"VISITAR TIENDA EN BOOTH ↗";
     $(".community-copy .eyebrow").textContent=t.communityEyebrow;
     $(".community h2").innerHTML=t.communityTitle;
