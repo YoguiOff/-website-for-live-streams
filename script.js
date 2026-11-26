@@ -121,6 +121,8 @@
   void handlePaymentReturn();
 
   const config = window.YOGI_CONFIG || {};
+  const shippingInfo = document.getElementById("shipping-info");
+  if (shippingInfo) shippingInfo.hidden = config.showShippingInfo === false;
   const player = document.getElementById("stream-player");
   const platformLabel = document.getElementById("player-platform");
   const channelLabel = document.getElementById("channel-platform");
