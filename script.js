@@ -221,8 +221,8 @@
   };
   const shopText = {
     es:{merch:"Merchandising oficial de ヨギ.",buy:"COMPRAR",shippingIncluded:"Envío incluido en el precio",japanOnly:"🇯🇵 Solo Japón",empty:"LA TIENDA SE ESTÁ PREPARANDO",emptyText:"Pronto encontrarás aquí el merchandising oficial de ヨギ.",noCategory:"NO HAY PRODUCTOS EN ESTA CATEGORÍA",tryOther:"Prueba otra categoría.",product:"Producto ヨギ",mug:"Taza ヨギ"},
-    en:{merch:"Official ヨギ merchandise.",buy:"BUY NOW",shippingIncluded:"Shipping included in the price",japanOnly:"🇯🇵 Japan shipping only",empty:"THE SHOP IS COMING SOON",emptyText:"Official ヨギ merchandise will be available here soon.",noCategory:"NO PRODUCTS IN THIS CATEGORY",tryOther:"Try another category.",product:"ヨギ Product",mug:"ヨギ Mug"},
-    ja:{merch:"ヨギの公式グッズです。",buy:"購入する",shippingIncluded:"送料込み",japanOnly:"🇯🇵 日本国内のみ発送",empty:"ショップ準備中",emptyText:"ヨギの公式グッズを近日公開します。",noCategory:"このカテゴリーに商品はありません",tryOther:"ほかのカテゴリーをお試しください。",product:"ヨギの商品",mug:"ヨギマグカップ"}
+    en:{merch:"Official ヨギ merchandise.",buy:"BUY NOW",shippingIncluded:"Shipping included in the price",japanOnly:"🇯🇵 Japan only",empty:"THE SHOP IS COMING SOON",emptyText:"Official ヨギ merchandise will be available here soon.",noCategory:"NO PRODUCTS IN THIS CATEGORY",tryOther:"Try another category.",product:"ヨギ Product",mug:"ヨギ Mug"},
+    ja:{merch:"ヨギの公式グッズです。",buy:"購入する",shippingIncluded:"送料込み",japanOnly:"🇯🇵 日本のみ",empty:"ショップ準備中",emptyText:"ヨギの公式グッズを近日公開します。",noCategory:"このカテゴリーに商品はありません",tryOther:"ほかのカテゴリーをお試しください。",product:"ヨギの商品",mug:"ヨギマグカップ"}
   };
   const currentShopText = () => shopText[window.YOGI_LANG] || shopText.es;
   const currentShopLabels = () => shopLabels[window.YOGI_LANG] || shopLabels.es;
